@@ -1,16 +1,18 @@
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class MainFrame extends JFrame {
     Editor editor = new Editor();
+
     public MainFrame() {
         super("Assembler IDE");
-        this.addWindowListener(new WindowListener() {
+        setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
 
@@ -48,16 +50,47 @@ public class MainFrame extends JFrame {
 
             }
         });
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setResizable(true);
-        this.setVisible(false);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setResizable(true);
+        setVisible(false);
     }
 
     public void init() {
+        JMenuBar bar = new JMenuBar();
+        bar.setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        bar.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        JMenu menu = new JMenu("File");
+        menu.setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        menu.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        JMenuItem item = new JMenuItem("Open...");
+        item.setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        item.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(e.getActionCommand());
+            }
+        });
+
+        bar.setBorderPainted(false);
+        menu.add(item);
+        menu.getPopupMenu().setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        menu.getPopupMenu().setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        bar.add(menu);
+        setJMenuBar(bar);
         JScrollPane jsp = new JScrollPane();
+        jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
         jsp.getViewport().add(editor);
+        //JPanel main = new JPanel();
+        JToolBar tool = new JToolBar();
+        tool.add(new JButton("aaa"));
+        //main.add(jsp);
+        //add(main);
+        add(tool);
         add(jsp);
-        setSize(400, 400);
+        jsp.setSize(400, 400);
+        //main.setSize(400, 400);
+        setExtendedState(MAXIMIZED_BOTH);
         setVisible(true);
 
     }
