@@ -1,9 +1,11 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+
+import static java.awt.Frame.MAXIMIZED_BOTH;
+import static java.awt.Frame.MAXIMIZED_BOTH;
 
 public class MainFrame extends JFrame {
     Editor editor = new Editor();
@@ -71,9 +73,18 @@ public class MainFrame extends JFrame {
                 System.out.println(e.getActionCommand());
             }
         });
-
+		JMenuItem item1 = new JMenuItem("Create Project");
+		item1.setForeground(Colors.MAIN_FOREGROUND_COLOR);
+		item1.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+		item1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Project.createNew();
+			}
+		});
         bar.setBorderPainted(false);
         menu.add(item);
+        menu.add(item1);
         menu.getPopupMenu().setBackground(Colors.MAIN_BACKGROUND_COLOR);
         menu.getPopupMenu().setForeground(Colors.MAIN_FOREGROUND_COLOR);
         bar.add(menu);
