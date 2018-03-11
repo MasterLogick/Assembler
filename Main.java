@@ -16,9 +16,9 @@ public class Main {
                 "FileChooser.saveInLabelText", "Сохранить в директории");
         UIManager.put(
                 "FileChooser.folderNameLabelText", "Путь директории");
-        new MainFrame().init();
+        new EditorFrame().init();
         try {
-            UIManager.setLookAndFeel(/*"com.sun.java.swing.plaf.windows.WindowsLookAndFeel"*/UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {

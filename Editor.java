@@ -4,17 +4,20 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.io.File;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Editor extends JTextPane {
+
 	private boolean stop = false;
 
 	public Editor() {
 		setBackground(Colors.MAIN_BACKGROUND_COLOR);
 		setForeground(Colors.MAIN_FOREGROUND_COLOR);
 		setFont(new Font("Monospaced", Font.PLAIN, 12));
-		setCaretColor(new Color(187, 187, 187));
+		setCaretColor(Colors.CURSOR_COLOR);
 		new Thread(new Parser()).start();
 	}
 

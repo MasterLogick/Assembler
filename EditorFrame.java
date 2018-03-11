@@ -1,16 +1,17 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.util.Vector;
 
-import static java.awt.Frame.MAXIMIZED_BOTH;
-import static java.awt.Frame.MAXIMIZED_BOTH;
-
-public class MainFrame extends JFrame {
+public class EditorFrame extends JFrame {
+    private static Vector<File> tabs = new Vector<File>();
     Editor editor = new Editor();
 
-    public MainFrame() {
+    public EditorFrame() {
         super("Assembler IDE");
         setBackground(Colors.MAIN_BACKGROUND_COLOR);
         setForeground(Colors.MAIN_FOREGROUND_COLOR);
@@ -22,7 +23,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                MainFrame.super.dispose();
+                EditorFrame.super.dispose();
                 editor.stop();
                 //TODO show dialog:save changes
             }
@@ -70,18 +71,18 @@ public class MainFrame extends JFrame {
         item.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(e.getActionCommand());
+                //TODO
             }
         });
-		JMenuItem item1 = new JMenuItem("Create Project");
-		item1.setForeground(Colors.MAIN_FOREGROUND_COLOR);
-		item1.setBackground(Colors.MAIN_BACKGROUND_COLOR);
-		item1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Project.createNew();
-			}
-		});
+        JMenuItem item1 = new JMenuItem("Create Project");
+        item1.setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        item1.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        item1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Project.createNew();
+            }
+        });
         bar.setBorderPainted(false);
         menu.add(item);
         menu.add(item1);
@@ -89,20 +90,30 @@ public class MainFrame extends JFrame {
         menu.getPopupMenu().setForeground(Colors.MAIN_FOREGROUND_COLOR);
         bar.add(menu);
         setJMenuBar(bar);
+        JPanel main = new JPanel();
+        main.add(new Tab("tEsTafff"));
+        main.setLayout(new BoxLayout(main,BoxLayout.Y_AXIS));
         JScrollPane jsp = new JScrollPane();
         jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
         jsp.getViewport().add(editor);
         //JPanel main = new JPanel();
-        JToolBar tool = new JToolBar();
+        /*JToolBar tool = new JToolBar();
         tool.add(new JButton("aaa"));
-        //main.add(jsp);
-        //add(main);
-        add(tool);
-        add(jsp);
-        jsp.setSize(400, 400);
-        //main.setSize(400, 400);
+        add(tool);*/
+
+        main.add(jsp);
+        add(main);
+        setMinimumSize(new Dimension(400,400));
         setExtendedState(MAXIMIZED_BOTH);
         setVisible(true);
 
+    }
+
+    public static void closeALL() {
+        tabs.removeAllElements();
+    }
+
+    public static void open(File file) {
+        tabs.add(file);
     }
 }
