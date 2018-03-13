@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Project {
 
@@ -67,13 +67,13 @@ public class Project {
             public void keyReleased(KeyEvent e) {
                 if (!projectName.getText().isEmpty()) {
                     String text = selectedPath.getText();
-                    selectedPath.setText(text.substring(0,text.lastIndexOf("\\")+1)+projectName.getText());
+                    selectedPath.setText(text.substring(0, text.lastIndexOf("\\") + 1) + projectName.getText());
                 }
             }
         });
         create.addActionListener(e -> {
             dialog.dispose();
-            create(projectName.getText(),selectedPath.getText());
+            create(projectName.getText(), selectedPath.getText());
         });
         jp.setBackground(Colors.SECONDARY_BACKGROUND_COLOR);
         jp.setForeground(Colors.MAIN_FOREGROUND_COLOR);
@@ -102,16 +102,16 @@ public class Project {
         File dir = new File(path);
         //dir.delete();
         dir.mkdir();
-        new File(path+"\\src").mkdir();
-        new File(path+"\\out").mkdir();
-        File main = new File(path+"\\src\\main.asm");
+        new File(path + "\\src").mkdir();
+        new File(path + "\\out").mkdir();
+        File main = new File(path + "\\src\\main.asm");
         try {
             main.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
         //-------------------MAIN ASM INPUT
-        File settings = new File(path+"settings.xml");
+        File settings = new File(path + "settings.xml");
         try {
             settings.createNewFile();
         } catch (IOException e) {
@@ -125,8 +125,8 @@ public class Project {
         }
         try {
             fw.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-                    "<project name=\""+name+"\">\n" +
-                    "    <directory main=\""+path+"\">\n" +
+                    "<project name=\"" + name + "\">\n" +
+                    "    <directory main=\"" + path + "\">\n" +
                     "        <src path=\"\\src\"/>\n" +
                     "        <out path=\"\\out\"/>\n" +
                     "        <import path=\"\\src\\import\"/>\n" +
@@ -142,7 +142,7 @@ public class Project {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        EditorFrame.closeALL();
-        EditorFrame.open(new File(path+"\\src\\main.asm"));
+        //EditorPane.closeALL();
+        EditorPane.open(new File(path + "\\src\\main.asm"));
     }
 }

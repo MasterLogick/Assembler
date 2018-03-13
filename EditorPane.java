@@ -7,11 +7,10 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.Vector;
 
-public class EditorFrame extends JFrame {
-    private static Vector<File> tabs = new Vector<File>();
-    Editor editor = new Editor();
+public class EditorPane extends JFrame {
+    static Editor editor = new Editor();
 
-    public EditorFrame() {
+    public EditorPane() {
         super("Assembler IDE");
         setBackground(Colors.MAIN_BACKGROUND_COLOR);
         setForeground(Colors.MAIN_FOREGROUND_COLOR);
@@ -23,8 +22,10 @@ public class EditorFrame extends JFrame {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                EditorFrame.super.dispose();
+                Editor.saveAll();
+                EditorPane.super.dispose();
                 editor.stop();
+                System.exit(0);
                 //TODO show dialog:save changes
             }
 
@@ -59,6 +60,7 @@ public class EditorFrame extends JFrame {
     }
 
     public void init() {
+        TabsPane.setBack(Colors.MAIN_BACKGROUND_COLOR);
         JMenuBar bar = new JMenuBar();
         bar.setForeground(Colors.MAIN_FOREGROUND_COLOR);
         bar.setBackground(Colors.MAIN_BACKGROUND_COLOR);
@@ -91,29 +93,34 @@ public class EditorFrame extends JFrame {
         bar.add(menu);
         setJMenuBar(bar);
         JPanel main = new JPanel();
-        main.add(new Tab("tEsTafff"));
-        main.setLayout(new BoxLayout(main,BoxLayout.Y_AXIS));
+        /*Tab t = new Tab("tEsTafff");
+        t.setForeground(Colors.TEXT_COLOR);
+        t.setBackground(Colors.MAIN_BACKGROUND_COLOR);*/
+        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+        //main.add(t);
         JScrollPane jsp = new JScrollPane();
         jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
         jsp.getViewport().add(editor);
-        //JPanel main = new JPanel();
-        /*JToolBar tool = new JToolBar();
-        tool.add(new JButton("aaa"));
-        add(tool);*/
-
+        main.add(new TabsPane());
         main.add(jsp);
+        jsp.setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        setForeground(Colors.MAIN_FOREGROUND_COLOR);
         add(main);
-        setMinimumSize(new Dimension(400,400));
+        setMinimumSize(new Dimension(400, 400));
         setExtendedState(MAXIMIZED_BOTH);
+        open(new File("C:\\1.txt"));
+        this.repaint();
         setVisible(true);
 
     }
 
-    public static void closeALL() {
-        tabs.removeAllElements();
-    }
-
     public static void open(File file) {
-        tabs.add(file);
+        Tab t = new Tab(file.getName());
+        t.setForeground(Colors.TEXT_COLOR);
+        t.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        TabsPane.add(t);
+        editor.openFile(file);
     }
 }

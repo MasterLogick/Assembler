@@ -1,6 +1,8 @@
 import javax.swing.*;
 
 public class Main {
+    static EditorPane ep;
+
     public static void main(String[] args) {
         UIManager.put(
                 "FileChooser.saveButtonText", "Сохранить");
@@ -16,7 +18,8 @@ public class Main {
                 "FileChooser.saveInLabelText", "Сохранить в директории");
         UIManager.put(
                 "FileChooser.folderNameLabelText", "Путь директории");
-        new EditorFrame().init();
+        ep = new EditorPane();
+        ep.init();
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
