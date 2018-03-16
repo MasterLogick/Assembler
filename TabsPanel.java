@@ -12,7 +12,7 @@ public class TabsPanel extends Canvas {
     public static void open(File f){
         add(new Tab(f.getName()));
         Editor.open(f);
-        //todo repaint
+        EditorFrame.getInstance().repaint();
     }
     static void add(Tab t){
         tabs.add(t);
@@ -27,7 +27,6 @@ public class TabsPanel extends Canvas {
             g.drawImage(bufferedImage, size, 0, null);
             size += t.getWidth();
         }
-        //todo
     }
 
     static class Tab extends Canvas{
