@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 
 public class EditorFrame extends JFrame {
@@ -41,6 +43,46 @@ public class EditorFrame extends JFrame {
         instance.setForeground(Colors.MAIN_FOREGROUND_COLOR);
         jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
 
+        getInstance().addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                //todo
+                getInstance().dispose();
+                System.exit(0);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
+
+        getInstance().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         jsp.getViewport().add(editor);
         main.add(new TabsPanel());

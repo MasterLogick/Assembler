@@ -12,6 +12,30 @@ import java.io.File;
 import java.util.Vector;
 
 public class TabsPanel extends Canvas {
+    @Override
+    public int getWidth() {
+        return EditorFrame.getInstance().getWidth();
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(getWidth(),getHeight());
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+        return new Dimension(getWidth(),getHeight());
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(getWidth(),getHeight());
+    }
+
+    @Override
+    public int getHeight() {
+        return 22;
+    }
     static Vector<Tab> tabs = new Vector<>();
     private static Color back= Colors.MAIN_BACKGROUND_COLOR;
 

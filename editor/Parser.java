@@ -92,10 +92,22 @@ public class Parser {
                 return null;
             }
         });
+        //-------------TEST---------------
+        /*
+        System.out.println();
+        for (Map.Entry<String,ParsePattern> entry:parsePatterns.entrySet()) {
+            System.out.println(entry.getKey());
+        }
+        System.out.println();
+        for (Map.Entry<String, HashMap<String, String>> entr:keyWords.entrySet()) {
+            System.out.println(entr.getKey());
+            System.out.println();
+            for (Map.Entry<String,String> entry:entr.getValue().entrySet()) {
+                System.out.println(entry.getKey()+" "+entry.getValue());
+            }
+            System.out.println();
+        }*/
     }
-
-    public static final boolean MUST_HAVE_NON_CHAR_SMB = true;
-    public static final boolean MUST_HAVE_CHAR_SMB = false;
 
     public static void addPattern(String type, ParsePattern pp) {
         parsePatterns.put(type, pp);
@@ -118,28 +130,30 @@ public class Parser {
             for (int i = 0; i < words.getLength(); i++) {
                 Node word = words.item(i);
                 if (word.getNodeName().equals("expression")) {
-                    if (keyWords.getOrDefault(node.getNodeName(), null) == null) {
+                    if (keyWords.get(node.getNodeName()) == null) {
                         keyWords.put(node.getNodeName(), new HashMap<>());
                     }
-                    keyWords.get(node.getNodeName()).put(word.getAttributes().item(0).getTextContent(), word.getTextContent());
-                    //System.out.println(word.getAttributes().item(0).getTextContent());
-                    //System.out.println(word.getTextContent());
+                    keyWords.get(node.getNodeName()).put(word.getTextContent(), word.getAttributes().item(0).getTextContent());
+                    /*System.out.println(word.getAttributes().item(0).getTextContent());
+                    System.out.println(word.getTextContent());*/
                 }
             }
         }
     }
 
     static void parse() {
+        //System.out.println("test");
+        StyledDocument sd = EditorFrame.getEditor().getStyledDocument();
+        SimpleAttributeSet sas = new SimpleAttributeSet();
+        StyleConstants.setForeground(sas,Colors.MAIN_FOREGROUND_COLOR);
+        sd.setCharacterAttributes(0, sd.getLength(), sas, false);
         for (Map.Entry<String, HashMap<String, String>> entry : keyWords.entrySet()) {
             ParsePattern pp = parsePatterns.get(entry.getKey());
-            StyledDocument sd = EditorFrame.getEditor().getStyledDocument();
-            SimpleAttributeSet sas = new SimpleAttributeSet();
-            StyleConstants.setForeground(sas,Colors.MAIN_FOREGROUND_COLOR);
-            sd.setCharacterAttributes(0, sd.getLength(), sas, false);
             for (Map.Entry<String, String> value : entry.getValue().entrySet()) {
-                parse(pp.getPattern(value.getKey(), value.getValue()), pp.getColor(value.getKey()), pp.isWord(value.getKey()));
+                parse(pp.getPattern(value.getValue(), value.getKey()), pp.getColor(value.getValue()), pp.isWord(value.getKey()));
             }
         }
+        sd.setCharacterAttributes(sd.getLength(), 1, sas, false);
     }
 
     private static void parse/*Patten*/(String pattern, Color color, boolean flag) {
@@ -153,14 +167,13 @@ public class Parser {
         Matcher m = null;
         m = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(text);
         while (m.find()) {
-            //System.out.println(text+ " " +m.start()+ " "+m.end());
             SimpleAttributeSet sas = new SimpleAttributeSet();
             StyleConstants.setForeground(sas, color);
-            if (flag) {
-                sd.setCharacterAttributes(m.start() + 1, m.end() - m.start() + 1, sas, false);
-            } else {
+            /*if (flag) {
                 sd.setCharacterAttributes(m.start(), m.end() - m.start(), sas, false);
-            }
+            } else {*/
+                sd.setCharacterAttributes(m.start(), m.end() - m.start(), sas, false);
+            /*}*/
         }
     }
 }
