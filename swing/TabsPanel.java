@@ -1,4 +1,7 @@
+package swing;
+
 import main.EditorFrame;
+import settings.Colors;
 import settings.Fonts;
 
 import java.awt.*;
@@ -10,16 +13,26 @@ import java.util.Vector;
 
 public class TabsPanel extends Canvas {
     static Vector<Tab> tabs = new Vector<>();
+    private static Color back= Colors.MAIN_BACKGROUND_COLOR;
+
     public static void open(File f){
         add(new Tab(f.getName()));
         EditorFrame.getEditor().open(f);
         EditorFrame.getInstance().repaint();
+    }
+    public static void setBack(Color c){
+        back=c;
+    }
+    public static Color getBack(){
+        return back;
     }
     static void add(Tab t){
         tabs.add(t);
     }
     @Override
     public void paint(Graphics g) {
+        g.setColor(getBack());
+        g.fillRect(0,0,getWidth(),getHeight());
         int size = 0;
         for (Tab t : tabs) {
             System.out.println(t.getWidth()+" "+ t.getHeight());

@@ -132,11 +132,12 @@ public class Parser {
     static void parse() {
         for (Map.Entry<String, HashMap<String, String>> entry : keyWords.entrySet()) {
             ParsePattern pp = parsePatterns.get(entry.getKey());
+            StyledDocument sd = EditorFrame.getEditor().getStyledDocument();
+            SimpleAttributeSet sas = new SimpleAttributeSet();
+            StyleConstants.setForeground(sas,Colors.MAIN_FOREGROUND_COLOR);
+            sd.setCharacterAttributes(0, sd.getLength(), sas, false);
             for (Map.Entry<String, String> value : entry.getValue().entrySet()) {
-                SimpleAttributeSet sas = new SimpleAttributeSet();
-                StyleConstants.setForeground(sas, pp.getColor(value.getKey()));
                 parse(pp.getPattern(value.getKey(), value.getValue()), pp.getColor(value.getKey()), pp.isWord(value.getKey()));
-                //sd.setCharacterAttributes(0, sd.getLength(), sas, false);
             }
         }
     }
