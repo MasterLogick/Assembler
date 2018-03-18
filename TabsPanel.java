@@ -1,3 +1,4 @@
+import main.EditorFrame;
 import settings.Fonts;
 
 import java.awt.*;
@@ -11,7 +12,7 @@ public class TabsPanel extends Canvas {
     static Vector<Tab> tabs = new Vector<>();
     public static void open(File f){
         add(new Tab(f.getName()));
-        Editor.open(f);
+        EditorFrame.getEditor().open(f);
         EditorFrame.getInstance().repaint();
     }
     static void add(Tab t){
