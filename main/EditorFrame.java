@@ -7,6 +7,8 @@ import settings.Colors;
 import swing.TabsPanel;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -100,7 +102,6 @@ public class EditorFrame extends JFrame {
         JMenu menu = new JMenu("File");
         JMenuItem open = new JMenuItem("Open...");
         JMenuItem create = new JMenuItem("Create Project");
-
         bar.setForeground(Colors.MAIN_FOREGROUND_COLOR);
         bar.setBackground(Colors.MAIN_BACKGROUND_COLOR);
         menu.setForeground(Colors.MAIN_FOREGROUND_COLOR);
@@ -112,18 +113,20 @@ public class EditorFrame extends JFrame {
         menu.getPopupMenu().setBackground(Colors.MAIN_BACKGROUND_COLOR);
         menu.getPopupMenu().setForeground(Colors.MAIN_FOREGROUND_COLOR);
 
-        create.addActionListener(new ActionListener() {
+        create.addActionListener(e -> {
+            Project.createNew();
+            System.out.println("123");
+        });
+        open.addActionListener(e -> {
+            Project.openProject();
+            System.out.println("asd");
+        });
+        /*menu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Project.createNew();
+                instance.repaint(1000);
             }
-        });
-        open.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Project.openProject();
-            }
-        });
+        });*/
 
         bar.setBorderPainted(false);
 

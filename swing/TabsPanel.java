@@ -19,47 +19,53 @@ public class TabsPanel extends Canvas {
 
     @Override
     public Dimension getMinimumSize() {
-        return new Dimension(getWidth(),getHeight());
+        return new Dimension(getWidth(), getHeight());
     }
 
     @Override
     public Dimension getMaximumSize() {
-        return new Dimension(getWidth(),getHeight());
+        return new Dimension(getWidth(), getHeight());
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(getWidth(),getHeight());
+        return new Dimension(getWidth(), getHeight());
     }
 
     @Override
     public int getHeight() {
         return 22;
     }
-    static Vector<Tab> tabs = new Vector<>();
-    private static Color back= Colors.MAIN_BACKGROUND_COLOR;
 
-    public static void open(File f){
-        add(new Tab(f.getName()));
+    static Vector<Tab> tabs = new Vector<>();
+    private static Color back = Colors.MAIN_BACKGROUND_COLOR;
+
+    public static void open(File f) {
+        add(new Tab(f));
         EditorFrame.getEditor().open(f);
         EditorFrame.getInstance().repaint();
     }
-    public static void setBack(Color c){
-        back=c;
+
+    public static void setBack(Color c) {
+        back = c;
     }
-    public static Color getBack(){
+
+    public static Color getBack() {
         return back;
     }
-    static void add(Tab t){
+
+    static void add(Tab t) {
         tabs.add(t);
     }
+
     @Override
     public void paint(Graphics g) {
+        System.out.println("test");
         g.setColor(getBack());
-        g.fillRect(0,0,getWidth(),getHeight());
+        g.fillRect(0, 0, getWidth(), getHeight());
         int size = 0;
         for (Tab t : tabs) {
-            System.out.println(t.getWidth()+" "+ t.getHeight());
+            System.out.println(t.getWidth() + " " + t.getHeight());
             BufferedImage bufferedImage = new BufferedImage(t.getWidth(), t.getHeight(), BufferedImage.TYPE_INT_RGB);
             t.paint(bufferedImage.getGraphics());
             g.drawImage(bufferedImage, size, 0, null);
@@ -67,7 +73,7 @@ public class TabsPanel extends Canvas {
         }
     }
 
-    static class Tab extends Canvas{
+    private static class Tab extends Canvas {
         private Dimension size = new Dimension();
 
         public Color getBoundsColor() {
@@ -79,7 +85,7 @@ public class TabsPanel extends Canvas {
         }
 
         private Color boundsColor = new Color(75, 75, 75);
-        private String name = "";
+        private File name = null;
         private Color textColor = new Color(187, 187, 187);
 
         @Override
@@ -115,9 +121,9 @@ public class TabsPanel extends Canvas {
             return (int) size.getHeight();
         }
 
-        public Tab(String name) {
+        Tab(File name) {
             this.name = name;
-            TextLayout tl = new TextLayout(name, Fonts.MAIN_FONT, new FontRenderContext(null, true, true));
+            TextLayout tl = new TextLayout(name.getName(), Fonts.MAIN_FONT, new FontRenderContext(null, true, true));
             size = new Dimension((int) ((tl.getBounds().getWidth()) + 9 + 26), 22);
         }
 
@@ -129,7 +135,7 @@ public class TabsPanel extends Canvas {
             g.fillRect(0, 0, (int) size.getWidth(), (int) size.getHeight());
             g.setColor(getForeground());
             g.setFont(Fonts.MAIN_FONT);
-            g.drawString(name, 9, 14);
+            g.drawString(name.getName(), 9, 14);
             g.setColor(boundsColor);
 
             g.setStroke(new BasicStroke(2));

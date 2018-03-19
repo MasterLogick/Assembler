@@ -146,7 +146,7 @@ public class Parser {
         StyledDocument sd = EditorFrame.getEditor().getStyledDocument();
         SimpleAttributeSet sas = new SimpleAttributeSet();
         StyleConstants.setForeground(sas,Colors.MAIN_FOREGROUND_COLOR);
-        sd.setCharacterAttributes(0, sd.getLength(), sas, false);
+        sd.setCharacterAttributes(0, sd.getLength(), sas, true);
         for (Map.Entry<String, HashMap<String, String>> entry : keyWords.entrySet()) {
             ParsePattern pp = parsePatterns.get(entry.getKey());
             for (Map.Entry<String, String> value : entry.getValue().entrySet()) {
