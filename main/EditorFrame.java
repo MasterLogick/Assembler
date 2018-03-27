@@ -4,17 +4,11 @@ import editor.Editor;
 import editor.Parser;
 import project.Project;
 import settings.Colors;
-import swing.TabsPanel;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 
 public class EditorFrame extends JFrame {
     public static EditorFrame getInstance() {
@@ -38,9 +32,12 @@ public class EditorFrame extends JFrame {
     private static void init() {
         JPanel main = new JPanel();
         JScrollPane jsp = new JScrollPane();
+        JTabbedPane jtp=new JTabbedPane();
 
         jsp.setForeground(Colors.MAIN_FOREGROUND_COLOR);
         jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
+        jtp.setForeground(Colors.MAIN_FOREGROUND_COLOR);
+        jtp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
         instance.setBackground(Colors.MAIN_BACKGROUND_COLOR);
         instance.setForeground(Colors.MAIN_FOREGROUND_COLOR);
         jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
@@ -87,8 +84,9 @@ public class EditorFrame extends JFrame {
         getInstance().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
         jsp.getViewport().add(editor);
-        main.add(new TabsPanel());
-        main.add(jsp);
+        //jtp.add(jsp);
+        jtp.addTab("test",jsp);
+        main.add(jtp);
         instance.add(main);
         instance.setMinimumSize(new Dimension(400, 400));
         instance.setExtendedState(MAXIMIZED_BOTH);
