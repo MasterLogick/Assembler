@@ -14,6 +14,13 @@ public class Project {
 		JButton cancel = new JButton("Cancel");
 		JButton create = new JButton("Create");
 		JButton browse = new JButton("Browse...");
+		JFileChooser fileChooser = new JFileChooser();
+
+		cancel.addActionListener(e -> dialog.dispose());
+		browse.addActionListener(e -> {
+
+		});
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		main.setLayout(new GridLayout(3,1));
 		filler.setLayout(new BoxLayout(filler,BoxLayout.X_AXIS));
@@ -26,8 +33,9 @@ public class Project {
 		filler.add(browse);
 		main.add(filler);
 		filler= new JPanel();
-		filler.add(cancel,BorderLayout.EAST);
-		filler.add(create,BorderLayout.EAST);
+		filler.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		filler.add(create);
+		filler.add(cancel);
 		main.add(filler);
 		dialog.add(main);
 		dialog.pack();
