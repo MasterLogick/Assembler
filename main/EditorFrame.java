@@ -23,7 +23,7 @@ public class EditorFrame extends JFrame {
     private static Editor editor;
 
     public static void main(String[] args) {
-        Parser.init();
+		Parser.init();
         instance = new EditorFrame();
         editor = new Editor();
         EditorFrame.init();
