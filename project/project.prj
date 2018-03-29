@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+    <name>untitled</name>
+    <work_dir>C:\untitled</work_dir>
+    <src>
+        <dir>$WORK_DIR$\src</dir>
+    </src>
+    <out>
+        <dir>$WORK_DIR$\out</dir>
+    </out>
+</project>
