@@ -1,10 +1,15 @@
 package project;
 
 import main.EditorFrame;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileSystemView;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -84,13 +89,17 @@ public class Project {
 	}
 
 	private static void create(String name, String path) {
-		System.out.println("test " + name + " " + path);
+		//System.out.println("test " + name + " " + path);
 		File dir = new File(path);
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
 		new File(path +File.separator+ "src").mkdir();
-		new File(path +File.separator+ "src"+File.separator+"main.asm").mkdir();
+		try {
+			new File(path +File.separator+ "src"+File.separator+"main.asm").createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		new File(path +File.separator+ "out").mkdir();
 		File project = new File(path +File.separator+ "project.prj");
 		try {
@@ -106,22 +115,21 @@ public class Project {
 		}
 		pw.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
 				"<project>\n" +
-				"    <name>" + name + "</name>\n" +
-				"    <work_dir>" + path + "</work_dir>\n" +
-				"    <src>\n" +
-				"        <dir>$WORK_DIR$"+File.separator+"src</dir>\n" +
-				"    </src>\n" +
-				"    <out>\n" +
-				"        <dir>$WORK_DIR$"+File.separator+"out</dir>\n" +
-				"    </out>\n" +
+				"    <name>"+name+"</name>\n" +
+				"    <work_dir>"+path+"</work_dir>\n" +
+				"    <src>\\\\WORK_DIR\\\\\\src</src>\n" +
+				"    <out>\\\\WORK_DIR\\\\"+File.separator+"out</out>\n" +
+				"    <main>\\\\SRC\\\\"+File.separator+"main.asm</main>\n" +
 				"</project>");
+		pw.close();
+
 		EditorFrame.getEditor().open(new File(path +File.separator+ "src"+File.separator+"main.asm"));
 	}
 
 	public static void openProject() {
-		for (File f:FileSystemView.getFileSystemView().getRoots()) {
+		/*for (File f:FileSystemView.getFileSystemView().getRoots()) {
 			System.out.println(f.toString());
-		}
+		}*/
 		JFileChooser dialog = new JFileChooser(FileSystemView.getFileSystemView().getRoots()[0]);
 		dialog.setDialogTitle("Open project");
 		dialog.setMultiSelectionEnabled(false);
@@ -141,7 +149,22 @@ public class Project {
 		});
 		if(dialog.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
 			File project = dialog.getSelectedFile();
-			File dir = dialog.getCurrentDirectory();
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = null;
+			Document doc = null;
+			try {
+				db = dbf.newDocumentBuilder();
+				doc = db.parse(project);
+			} catch (SAXException | ParserConfigurationException | IOException e) {
+				e.printStackTrace();
+			}
+			String work_dir = doc.getElementsByTagName("work_dir").item(0).getTextContent();
+			String src = doc.getElementsByTagName("src").item(0).getTextContent();
+			src=src.replaceAll("\\\\WORK_DIR\\\\",work_dir);
+			String main = doc.getElementsByTagName("main").item(0).getTextContent();
+			main=main.replaceAll("\\\\WORK_DIR\\\\",work_dir);
+			main=main.replaceAll("\\\\SRC\\\\",src);
+			System.out.println(work_dir+" "+src+" "+main);
 		}
 	}
 }

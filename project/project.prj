@@ -2,10 +2,7 @@
 <project>
     <name>untitled</name>
     <work_dir>C:\untitled</work_dir>
-    <src>
-        <dir>$WORK_DIR$\src</dir>
-    </src>
-    <out>
-        <dir>$WORK_DIR$\out</dir>
-    </out>
+    <src>\\WORK_DIR\\\src</src>
+    <out>\\WORK_DIR\\\out</out>
+    <main>\\SRC\\\main.asm</main>
 </project>
