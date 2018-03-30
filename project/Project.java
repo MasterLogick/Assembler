@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Project {
+	private static Document project;
 
 	public static void createNew() {
 		final boolean[] isDirChosen = {false};
@@ -64,7 +65,7 @@ public class Project {
 			}
 		});
 		name.setText("untitled");
-		path.setText(FileSystemView.getFileSystemView().getRoots()[0].getPath()+ File.separator+"untitled");
+		path.setText(FileSystemView.getFileSystemView().getRoots()[0].getPath() + File.separator + "untitled");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setMultiSelectionEnabled(false);
 		main.setLayout(new GridLayout(3, 1));
@@ -94,14 +95,14 @@ public class Project {
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
-		new File(path +File.separator+ "src").mkdir();
+		new File(path + File.separator + "src").mkdir();
 		try {
-			new File(path +File.separator+ "src"+File.separator+"main.asm").createNewFile();
+			new File(path + File.separator + "src" + File.separator + "main.asm").createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		new File(path +File.separator+ "out").mkdir();
-		File project = new File(path +File.separator+ "project.prj");
+		new File(path + File.separator + "out").mkdir();
+		File project = new File(path + File.separator + "project.prj");
 		try {
 			project.createNewFile();
 		} catch (IOException e) {
@@ -109,21 +110,21 @@ public class Project {
 		}
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter(path +File.separator+ "project.prj");
+			pw = new PrintWriter(path + File.separator + "project.prj");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		pw.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
 				"<project>\n" +
-				"    <name>"+name+"</name>\n" +
-				"    <work_dir>"+path+"</work_dir>\n" +
-				"    <src>\\\\WORK_DIR\\\\\\src</src>\n" +
-				"    <out>\\\\WORK_DIR\\\\"+File.separator+"out</out>\n" +
-				"    <main>\\\\SRC\\\\"+File.separator+"main.asm</main>\n" +
+				"    <name>" + name + "</name>\n" +
+				"    <work_dir>" + path + "</work_dir>\n" +
+				"    <src>$[WORK_DIR]$\\src</src>\n" +
+				"    <out>$[WORK_DIR]$" + File.separator + "out</out>\n" +
+				"    <main>$[SRC]$" + File.separator + "main.asm</main>\n" +
 				"</project>");
 		pw.close();
-
-		EditorFrame.getEditor().open(new File(path +File.separator+ "src"+File.separator+"main.asm"));
+		setProject(project);
+		EditorFrame.getEditor().open(new File(path + File.separator + "src" + File.separator + "main.asm"));
 	}
 
 	public static void openProject() {
@@ -137,8 +138,10 @@ public class Project {
 		dialog.setFileFilter(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
-				if(f.isDirectory())return true;
-				if(f.getName().toLowerCase().endsWith(".prj")){return true;}
+				if (f.isDirectory()) return true;
+				if (f.getName().toLowerCase().endsWith(".prj")) {
+					return true;
+				}
 				return false;
 			}
 
@@ -147,24 +150,33 @@ public class Project {
 				return "Project ASM project file *.prj";
 			}
 		});
-		if(dialog.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
+		if (dialog.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			File project = dialog.getSelectedFile();
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = null;
-			Document doc = null;
-			try {
-				db = dbf.newDocumentBuilder();
-				doc = db.parse(project);
-			} catch (SAXException | ParserConfigurationException | IOException e) {
-				e.printStackTrace();
-			}
-			String work_dir = doc.getElementsByTagName("work_dir").item(0).getTextContent();
-			String src = doc.getElementsByTagName("src").item(0).getTextContent();
-			src=src.replaceAll("\\\\WORK_DIR\\\\",work_dir);
-			String main = doc.getElementsByTagName("main").item(0).getTextContent();
-			main=main.replaceAll("\\\\WORK_DIR\\\\",work_dir);
-			main=main.replaceAll("\\\\SRC\\\\",src);
-			System.out.println(work_dir+" "+src+" "+main);
+			setProject(project);
+			//System.out.println(getProjectAtrib("main"));
+			EditorFrame.getEditor().open(new File(getProjectAtrib("main")));
+		}
+	}
+
+	private static String getProjectAtrib(String tag) {
+		String ret = project.getElementsByTagName(tag).item(0).getTextContent();
+		int start = 0, end = 0;
+		while ((start = ret.indexOf("$[")) != -1) {
+			end = ret.length() - new StringBuilder(ret).reverse().lastIndexOf("$]");
+			String replace = project.getElementsByTagName(ret.substring(start + 2, end - 2).toLowerCase()).item(0).getTextContent();
+			ret = new StringBuilder(ret).replace(start, end, replace).toString();
+		}
+		return ret;
+	}
+
+	private static void setProject(File f) {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = null;
+		try {
+			db = dbf.newDocumentBuilder();
+			Project.project = db.parse(f);
+		} catch (SAXException | ParserConfigurationException | IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
