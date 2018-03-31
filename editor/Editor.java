@@ -1,6 +1,5 @@
 package editor;
 
-import main.EditorFrame;
 import settings.Colors;
 import settings.Fonts;
 import swing.TabsPanel;
@@ -12,8 +11,12 @@ import javax.swing.text.StyledDocument;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+import java.util.HashMap;
 
 public class Editor extends JTextPane {
+	private static File current = null;
+	private HashMap<String, String> pages = new HashMap<>();
+
 	public Editor() {
 		setBackground(Colors.MAIN_BACKGROUND_COLOR);
 		setForeground(Colors.MAIN_FOREGROUND_COLOR);
@@ -39,40 +42,55 @@ public class Editor extends JTextPane {
 
 	public void open(File f) {
 		TabsPanel.open(f);
-		setFile(TabsPanel.tabs.size() - 1);
 	}
 
-	public void setFile(int file) {
+	public void setFile(File f) {
+		System.out.println("test");
 		if (!TabsPanel.tabs.isEmpty()) {
-			File f = TabsPanel.tabs.get(file).getFile();
-			setEnabled(true);
-
-			BufferedReader bf = null;
-			try {
-				bf = new BufferedReader(new FileReader(f));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			try {
-				String s = "";
-				while ((s = bf.readLine()) != null) {
-					StyledDocument sd = getStyledDocument();
-					this.setText("");
-					sd.insertString(sd.getLength(), s + '\n', new SimpleAttributeSet());
+			if (!pages.containsKey(f.toString())) {
+				if (current != null) {
+					pages.put(current.toString(), getText());
 				}
-				bf.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (BadLocationException e) {
-				e.printStackTrace();
+				setText("");
+				setEnabled(true);
+				load(f);
+			} else {
+				setText(pages.get(f.toString()));
+
 			}
-			Parser.parse();
-			this.repaint();
-			EditorFrame.getTabsPanel().repaint();
-			EditorFrame.getTabsPanel().repaint();
+			current = f;
 		} else {
-			setText("");
+			//setText("");
 			setEnabled(false);
 		}
+		Parser.parse();
+		this.repaint();
+	}
+
+	private void load(File f) {
+		BufferedReader bf = null;
+		try {
+			bf = new BufferedReader(new FileReader(f));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			String s;
+			while ((s = bf.readLine()) != null) {
+				StyledDocument sd = getStyledDocument();
+				this.setText("");
+				sd.insertString(sd.getLength(), s + '\n', new SimpleAttributeSet());
+			}
+			bf.close();
+		} catch (IOException | BadLocationException e) {
+			e.printStackTrace();
+		}
+		try {
+			bf.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Parser.parse();
+		this.repaint();
 	}
 }

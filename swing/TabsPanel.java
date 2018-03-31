@@ -18,11 +18,11 @@ public class TabsPanel extends Canvas {
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
 				if (!tabs.isEmpty()) {
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						int x = e.getX() - EditorFrame.getTabsPanel().getX();
 						int a = 0;
-						System.out.println(x + " " + e.getX() + " " + getX());
 						for (Tab t : tabs) {
 							if (x > t.getWidth()) {
 								x -= t.getWidth();
@@ -98,13 +98,13 @@ public class TabsPanel extends Canvas {
 			}
 			if (index < tabs.size() && index >= 0) {
 				tabs.get(index).setSelected(true);
-				EditorFrame.getEditor().setFile(index);
+				EditorFrame.getEditor().setFile(tabs.get(index).getFile());
 			} else if (index < 0) {
 				select(0);
 			}
 			EditorFrame.getTabsPanel().repaint();
 		} else {
-			EditorFrame.getEditor().setFile(index);
+			EditorFrame.getEditor().setFile(new File(""));
 		}
 	}
 
