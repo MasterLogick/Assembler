@@ -39,32 +39,40 @@ public class Editor extends JTextPane {
 
 	public void open(File f) {
 		TabsPanel.open(f);
-		setFile(TabsPanel.tabs.size()-1);
+		setFile(TabsPanel.tabs.size() - 1);
 	}
 
 	public void setFile(int file) {
-		File f = TabsPanel.tabs.get(file).getFile();
-		BufferedReader bf = null;
-		try {
-			bf = new BufferedReader(new FileReader(f));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			String s = "";
-			while ((s = bf.readLine()) != null) {
-				StyledDocument sd = getStyledDocument();
-				this.setText("");
-				sd.insertString(sd.getLength(), s + '\n', new SimpleAttributeSet());
+		if (!TabsPanel.tabs.isEmpty()) {
+			File f = TabsPanel.tabs.get(file).getFile();
+			setEnabled(true);
+
+			BufferedReader bf = null;
+			try {
+				bf = new BufferedReader(new FileReader(f));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 			}
-			bf.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+			try {
+				String s = "";
+				while ((s = bf.readLine()) != null) {
+					StyledDocument sd = getStyledDocument();
+					this.setText("");
+					sd.insertString(sd.getLength(), s + '\n', new SimpleAttributeSet());
+				}
+				bf.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+			Parser.parse();
+			this.repaint();
+			EditorFrame.getTabsPanel().repaint();
+			EditorFrame.getTabsPanel().repaint();
+		} else {
+			setText("");
+			setEnabled(false);
 		}
-		Parser.parse();
-		this.repaint();
-		EditorFrame.getTabsPanel().repaint();
 	}
 }

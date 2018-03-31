@@ -18,22 +18,30 @@ public class TabsPanel extends Canvas {
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					int x = e.getX() - EditorFrame.getTabsPanel().getX();
-					int a = 0;
-					System.out.println(x + " " + e.getX() + " " + getX());
-					for (Tab t : tabs) {
-						if (x > t.getWidth()) {
-							x -= t.getWidth();
-							a++;
-						} else {
-							break;
+				if (!tabs.isEmpty()) {
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						int x = e.getX() - EditorFrame.getTabsPanel().getX();
+						int a = 0;
+						System.out.println(x + " " + e.getX() + " " + getX());
+						for (Tab t : tabs) {
+							if (x > t.getWidth()) {
+								x -= t.getWidth();
+								a++;
+							} else {
+								break;
+							}
+						}
+						if (a != tabs.size()) {
+							if (x >= tabs.get(a).getWidth() - 17 && x <= tabs.get(a).getWidth() - 10) {
+								tabs.remove(a);
+								select(a - 1);
+							} else {
+								select(a);
+							}
 						}
 					}
-					select(a);
-					EditorFrame.getEditor().setFile(a);
-					repaint();
 				}
+				repaint();
 			}
 
 			@Override
@@ -87,11 +95,20 @@ public class TabsPanel extends Canvas {
 	}
 
 	public static void select(int index) {
-		for (int i = 0; i < tabs.size(); i++) {
-			tabs.get(i).setSelected(false);
+		if (!tabs.isEmpty()) {
+			for (int i = 0; i < tabs.size(); i++) {
+				tabs.get(i).setSelected(false);
+			}
+			if (index < tabs.size() && index >= 0) {
+				tabs.get(index).setSelected(true);
+				EditorFrame.getEditor().setFile(index);
+			} else if (index < 0) {
+				select(0);
+			}
+			EditorFrame.getTabsPanel().repaint();
+		} else {
+			EditorFrame.getEditor().setFile(index);
 		}
-		tabs.get(index).setSelected(true);
-		EditorFrame.getTabsPanel().repaint();
 	}
 
 	public static Vector<Tab> tabs = new Vector<>();
@@ -132,6 +149,8 @@ public class TabsPanel extends Canvas {
 
 	@Override
 	public void update(Graphics g) {
+		g.setColor(getBack());
+		g.fillRect(0, 1, getWidth(), getHeight()-2);
 		int size = 0;
 		for (Tab t : tabs) {
 			BufferedImage bufferedImage = new BufferedImage(t.getWidth(), t.getHeight(), BufferedImage.TYPE_INT_RGB);

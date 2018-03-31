@@ -87,7 +87,7 @@ public class EditorFrame extends JFrame {
 		getInstance().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
 		jsp.getViewport().add(editor);
-		main.add(new TabsPanel());
+		main.add(tabsPanel);
 		main.add(editor);
 		instance.add(main);
 		instance.setMinimumSize(new Dimension(400, 400));
