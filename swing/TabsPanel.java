@@ -66,9 +66,6 @@ public class TabsPanel extends Canvas {
 		});
 	}
 
-	private void setSelected(int tab) {
-	}
-
 	@Override
 	public int getWidth() {
 		return EditorFrame.getInstance().getWidth();
@@ -96,8 +93,8 @@ public class TabsPanel extends Canvas {
 
 	public static void select(int index) {
 		if (!tabs.isEmpty()) {
-			for (int i = 0; i < tabs.size(); i++) {
-				tabs.get(i).setSelected(false);
+			for (Tab tab : tabs) {
+				tab.setSelected(false);
 			}
 			if (index < tabs.size() && index >= 0) {
 				tabs.get(index).setSelected(true);
@@ -127,7 +124,7 @@ public class TabsPanel extends Canvas {
 		return back;
 	}
 
-	static void add(Tab t) {
+	private static void add(Tab t) {
 		tabs.add(t);
 	}
 
@@ -150,7 +147,7 @@ public class TabsPanel extends Canvas {
 	@Override
 	public void update(Graphics g) {
 		g.setColor(getBack());
-		g.fillRect(0, 1, getWidth(), getHeight()-2);
+		g.fillRect(0, 1, getWidth(), getHeight() - 2);
 		int size = 0;
 		for (Tab t : tabs) {
 			BufferedImage bufferedImage = new BufferedImage(t.getWidth(), t.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -167,11 +164,11 @@ public class TabsPanel extends Canvas {
 
 		boolean selected = false;
 
-		public void setSelected(boolean selected) {
+		void setSelected(boolean selected) {
 			this.selected = selected;
 		}
 
-		private Dimension size = new Dimension();
+		private Dimension size;
 
 		public Color getBoundsColor() {
 			return boundsColor;
@@ -182,7 +179,7 @@ public class TabsPanel extends Canvas {
 		}
 
 		private Color boundsColor = Colors.BOUNDS_COLOR;
-		private File name = null;
+		private File name;
 		private Color textColor = Colors.TEXT_COLOR;
 
 		@Override
@@ -231,7 +228,7 @@ public class TabsPanel extends Canvas {
 			if (selected)
 				g.setColor(boundsColor);
 			else
-				g.setColor(EditorFrame.getTabsPanel().getBack());
+				g.setColor(getBack());
 			g.fillRect(0, 0, (int) size.getWidth(), (int) size.getHeight());
 			g.setColor(getTextColor());
 			g.setFont(Fonts.TEXT_FONT);
