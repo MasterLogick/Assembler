@@ -38,9 +38,12 @@ public class Editor extends JTextPane {
 	}
 
 	public void open(File f) {
-		//System.out.println("test");
 		TabsPanel.open(f);
-		//System.out.println("test");
+		setFile(TabsPanel.tabs.size()-1);
+	}
+
+	public void setFile(int file) {
+		File f = TabsPanel.tabs.get(file).getFile();
 		BufferedReader bf = null;
 		try {
 			bf = new BufferedReader(new FileReader(f));
@@ -51,6 +54,7 @@ public class Editor extends JTextPane {
 			String s = "";
 			while ((s = bf.readLine()) != null) {
 				StyledDocument sd = getStyledDocument();
+				this.setText("");
 				sd.insertString(sd.getLength(), s + '\n', new SimpleAttributeSet());
 			}
 			bf.close();
