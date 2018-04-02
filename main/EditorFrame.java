@@ -1,7 +1,7 @@
 package main;
 
 import editor.Editor;
-import editor.Parser;
+import integration.VBox;
 import project.Project;
 import settings.Colors;
 import swing.TabsPanel;
@@ -25,11 +25,14 @@ public class EditorFrame extends JFrame {
 	private static TabsPanel tabsPanel;
 
 	public static void main(String[] args) {
+		System.out.println(System.getProperty("vbox.home"));
+		new VBox().init();
+		/*
 		Parser.init();
 		instance = new EditorFrame();
 		editor = new Editor();
 		tabsPanel = new TabsPanel();
-		EditorFrame.init();
+		EditorFrame.init();*/
 	}
 
 	private static void init() {
