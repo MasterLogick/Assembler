@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="untitled">
+    <directory main="C:\untitled\">
+        <src path="\src"/>
+        <out path="\out"/>
+        <import path="\src\import"/>
+    </directory>
+    <files>
+        <main path="\main.asm"/>
+    </files>
+    <settings>
+        <compiler path="$DEFAULT_COMPILER$"/>
+    </settings>
+</project>
