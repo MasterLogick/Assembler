@@ -1,13 +1,15 @@
 package main;
 
-import editor.Editor;
-import integration.VBox;
+import editor.*;
+import integration.VirtualBox.VBox;
 import project.Project;
 import settings.Colors;
 import swing.TabsPanel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -25,21 +27,27 @@ public class EditorFrame extends JFrame {
 	private static TabsPanel tabsPanel;
 
 	public static void main(String[] args) {
-		System.out.println(System.getProperty("vbox.home"));
-		new VBox().init();
-		/*
+		//System.out.println(System.getProperty("vbox.home"));
+		//new VBox().init();
 		Parser.init();
 		instance = new EditorFrame();
 		editor = new Editor();
 		tabsPanel = new TabsPanel();
-		EditorFrame.init();*/
+		EditorFrame.init();
 	}
 
 	private static void init() {
 		JPanel main = new JPanel();
 		JScrollPane jsp = new JScrollPane();
 		//JTabbedPane jtp=new JTabbedPane();
-
+		JToolBar jtp = new JToolBar(JToolBar.HORIZONTAL);
+		jtp.setBorderPainted(false);
+		jtp.setRollover(false);
+		JButton run = new JButton(new ImageIcon("C:\\run.png"));
+		run.createToolTip().setTipText("Run program");
+		//JButton stop = new JButton(new ImageIcon("C:\\stop.png"));
+		jtp.add(run);
+		main.add(jtp);
 		jsp.setForeground(Colors.MAIN_FOREGROUND_COLOR);
 		jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
         /*jtp.setForeground(Colors.MAIN_FOREGROUND_COLOR);
@@ -48,42 +56,12 @@ public class EditorFrame extends JFrame {
 		instance.setForeground(Colors.MAIN_FOREGROUND_COLOR);
 		jsp.setBackground(Colors.MAIN_BACKGROUND_COLOR);
 
-		getInstance().addWindowListener(new WindowListener() {
-			@Override
-			public void windowOpened(WindowEvent e) {
-
-			}
-
+		getInstance().addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				//todo
+				Editor.saveAll();
 				getInstance().dispose();
 				System.exit(0);
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e) {
-
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e) {
-
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-
 			}
 		});
 
@@ -93,7 +71,7 @@ public class EditorFrame extends JFrame {
 		main.add(tabsPanel);
 		main.add(editor);
 		instance.add(main);
-		instance.setMinimumSize(new Dimension(400, 400));
+		instance.setMinimumSize(new Dimension(640,480));
 		instance.setExtendedState(MAXIMIZED_BOTH);
 		instance.setJMenuBar(menuInit());
 		instance.repaint();
@@ -118,18 +96,10 @@ public class EditorFrame extends JFrame {
 
 		create.addActionListener(e -> {
 			Project.createNew();
-			System.out.println("123");
 		});
 		open.addActionListener(e -> {
 			Project.openProject();
-			System.out.println("asd");
 		});
-        /*menu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                instance.repaint(1000);
-            }
-        });*/
 
 		bar.setBorderPainted(false);
 

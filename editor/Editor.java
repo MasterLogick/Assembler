@@ -8,34 +8,27 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class Editor extends JTextPane {
 	private static File current = null;
-	private HashMap<String, String> pages = new HashMap<>();
+	private static HashMap<String, String> pages = new HashMap<>();
 
 	public Editor() {
 		setBackground(Colors.MAIN_BACKGROUND_COLOR);
 		setForeground(Colors.MAIN_FOREGROUND_COLOR);
 		setFont(Fonts.MAIN_FONT);
 		setCaretColor(Colors.CURSOR_COLOR);
-		addKeyListener(new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-
-			}
-
+		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				Parser.parse();
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
 			}
 		});
 	}
@@ -49,7 +42,7 @@ public class Editor extends JTextPane {
 		if (!TabsPanel.tabs.isEmpty()) {
 			if (!pages.containsKey(f.toString())) {
 				if (current != null) {
-					pages.put(current.toString(), getText());
+					pages.put(current.getAbsolutePath(), getText());
 				}
 				setText("");
 				setEnabled(true);
@@ -92,5 +85,19 @@ public class Editor extends JTextPane {
 		}
 		Parser.parse();
 		this.repaint();
+	}
+
+    public static void saveAll() {
+		for (Map.Entry<String,String> f:pages.entrySet()) {
+			File save = new File(f.getKey());
+			PrintWriter pw = null;
+			try {
+				pw = new PrintWriter(save);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			pw.print(f.getValue());
+			pw.close();
+		}
 	}
 }
